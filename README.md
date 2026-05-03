@@ -4,9 +4,9 @@
 
 **Computer vision tools for aerial and video footage that run entirely in your browser**
 
-[Live Demo](https://vantagelabs.lodonu.dev/) · [Available Tools](#available-tools) · [How It Works](#how-it-works) · [Run Locally](#run-locally)
+[Live Demo](https://vantage.lodonu.dev/) · [Available Tools](#available-tools) · [How It Works](#how-it-works) · [Run Locally](#run-locally)
 
-[![Live Demo](https://img.shields.io/badge/demo-vantagelabs.lodonu.dev-b15a2c?style=flat-square)](https://vantagelabs.lodonu.dev/)
+[![Live Demo](https://img.shields.io/badge/demo-vantage.lodonu.dev-b15a2c?style=flat-square)](https://vantage.lodonu.dev/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-64748b?style=flat-square)](LICENSE)
 [![React](https://img.shields.io/badge/react-19-0d9488?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![Made in Ghana](https://img.shields.io/badge/made%20in-Accra-64748b?style=flat-square)](#about)

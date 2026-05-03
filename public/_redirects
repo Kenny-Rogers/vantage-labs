@@ -1,7 +1,0 @@
-# Cloudflare Pages SPA fallback.
-# The trailing `!` is the force flag: it tells Cloudflare to apply the
-# rewrite even after its auto-canonicalisation (which would otherwise
-# strip `.html` from the target and confuse the validator into rejecting
-# this rule as a potential infinite loop, error code 10021).
-# Status 200 is a rewrite (URL stays as the user typed it), not a redirect.
-/*    /index.html   200!

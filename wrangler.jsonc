@@ -1,0 +1,31 @@
+// Cloudflare Workers Assets config for vantage.lodonu.dev.
+//
+// Cloudflare picked this project up as a Worker with the Static
+// framework preset, so Workers Assets serves the build output. We use
+// its first-class SPA setting (not_found_handling) instead of a
+// _redirects file — the _redirects parser in Workers Assets rejects
+// the SPA catch-all (`/* /index.html 200`) for two different reasons:
+//
+//   - status 200 trips the loop validator (10021) because Cloudflare's
+//     URL canonicalisation could feed the rule its own normalised
+//     destination.
+//   - the documented force-flag workaround (`200!`) is parsed as
+//     status 0 by wrangler 4.87+, which the validator rejects too.
+//
+// "single-page-application" tells Workers Assets: when a path doesn't
+// match a static file, serve /index.html with status 200 (rewrite,
+// URL preserved). Same end behaviour as the redirects rule we deleted,
+// done at the platform level.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "vantage-labs",
+  "compatibility_date": "2026-05-03",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "build",
+    "not_found_handling": "single-page-application"
+  }
+}
