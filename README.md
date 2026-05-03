@@ -2,7 +2,7 @@
 
 # VantageLabs
 
-**Computer vision tools for aerial and video footage — runs entirely in your browser**
+**Computer vision tools for aerial and video footage that run entirely in your browser**
 
 [Live Demo](https://USERNAME.github.io/vantage-labs/) · [Available Tools](#available-tools) · [How It Works](#how-it-works) · [Run Locally](#run-locally)
 
@@ -19,7 +19,7 @@
 
 ## What is VantageLabs?
 
-A small, focused toolkit for working with drone footage and video files in the browser. Drop a video in, get the frames out — no upload, no server, no account.
+A small, focused toolkit for working with drone footage and video files in the browser. Drop a video in, get the frames out. No upload, no server, no account.
 
 The same computer-vision logic ships twice: once as TypeScript-style JavaScript that runs on the user's GPU/CPU via the Canvas API, and once as Python that runs locally on your machine (and, soon, in the same browser tab via [Pyodide](https://pyodide.org/)).
 
@@ -38,22 +38,22 @@ The same computer-vision logic ships twice: once as TypeScript-style JavaScript 
 
 VantageLabs is a **client-only** app. There is no backend we own. When you drop a video in:
 
-1. The browser creates an in-memory `URL.createObjectURL` from the file — no network request, no upload.
+1. The browser creates an in-memory `URL.createObjectURL` from the file. No network request, no upload.
 2. A hidden `<video>` element decodes the video, and a `<canvas>` paints each frame at full resolution.
 3. The canvas encodes each frame as a JPEG `Blob`, all in your tab's memory.
 4. JSZip (lazy-loaded only when you click *Download All*) bundles the JPEGs into a ZIP.
 
-For heavier algorithms that don't fit comfortably in JavaScript, the same logic is written in Python under `python/` and will load in the browser via Pyodide — same entry points, same defaults — so the standalone CLI tool and the in-browser tool stay aligned. For models that even Pyodide can't carry (large YOLO weights, mapping pipelines), an optional Hugging Face Inference Endpoint is the only network hop.
+For heavier algorithms that don't fit comfortably in JavaScript, the same logic is written in Python under `python/` and will load in the browser via Pyodide (same entry points, same defaults) so the standalone CLI tool and the in-browser tool stay aligned. For models that even Pyodide can't carry (large YOLO weights, mapping pipelines), an optional Hugging Face Inference Endpoint is the only network hop.
 
 ## Tech Stack
 
-- **React 19 + React Router 7** — UI and routing
-- **Canvas API + HTML5 Video** — in-browser frame extraction
-- **JSZip** — client-side ZIP packaging (lazy-loaded chunk)
-- **OpenCV (cv2)** — Python sibling of the in-browser pipeline
-- **Pyodide** *(planned)* — runs the Python tools in the same browser tab
-- **YOLOv8 / ONNX Runtime Web** *(planned)* — object detection without a server
-- **GitHub Pages + GitHub Actions** — static hosting, deploys on push to `main`
+- **React 19 + React Router 7**: UI and routing
+- **Canvas API + HTML5 Video**: in-browser frame extraction
+- **JSZip**: client-side ZIP packaging (lazy-loaded chunk)
+- **OpenCV (cv2)**: Python sibling of the in-browser pipeline
+- **Pyodide** *(planned)*: runs the Python tools in the same browser tab
+- **YOLOv8 / ONNX Runtime Web** *(planned)*: object detection without a server
+- **GitHub Pages + GitHub Actions**: static hosting, deploys on push to `main`
 
 ## Project Structure
 
@@ -107,19 +107,19 @@ python3 extractor.py path/to/drone-footage.mp4
 python3 extractor.py drone-footage.mp4 --interval 0.5 --output ./stills --quality 90
 ```
 
-`extract_frames` is also importable as a library — see [python/frame_extraction/README.md](python/frame_extraction/README.md). The same function is what the browser-side Pyodide build will load.
+`extract_frames` is also importable as a library; see [python/frame_extraction/README.md](python/frame_extraction/README.md). The same function is what the browser-side Pyodide build will load.
 
 ## Roadmap
 
-- [x] **Frame Extractor** — Extract high-res stills from any video
+- [x] **Frame Extractor**: Extract high-res stills from any video
 - [x] **Python sibling** for Frame Extractor (OpenCV CLI)
 - [x] **GitHub Pages** deploy + SPA fallback for deep links
-- [ ] **Sharpness Scorer** — Auto-rank by Laplacian variance
-- [ ] **Color Segmentation** — HSV thresholds for vegetation / water / built
-- [ ] **Pyodide integration** — run the Python tools in-browser
-- [ ] **Object Detection** — YOLOv8 in-browser via ONNX Runtime Web
-- [ ] **Traffic Analysis** — vehicle counting with heatmap overlay
-- [ ] **Aerial Mapper** — orthomosaic stitching
+- [ ] **Sharpness Scorer**: Auto-rank by Laplacian variance
+- [ ] **Color Segmentation**: HSV thresholds for vegetation / water / built
+- [ ] **Pyodide integration**: run the Python tools in-browser
+- [ ] **Object Detection**: YOLOv8 in-browser via ONNX Runtime Web
+- [ ] **Traffic Analysis**: vehicle counting with heatmap overlay
+- [ ] **Aerial Mapper**: orthomosaic stitching
 
 ## About
 

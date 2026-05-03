@@ -236,12 +236,12 @@ function FrameExtractor() {
     if (pyError) {
       pythonStatus = {
         kind: 'error',
-        text: 'Couldn’t start Python — using JavaScript.',
+        text: 'Couldn’t start Python. Falling back to JavaScript.',
       };
     } else if (scriptError) {
       pythonStatus = {
         kind: 'error',
-        text: 'Couldn’t load extractor.py — using JavaScript.',
+        text: 'Couldn’t load extractor.py. Falling back to JavaScript.',
       };
     } else if (pyLoading || !pyodide) {
       pythonStatus = { kind: 'info', text: 'Loading Python runtime…' };

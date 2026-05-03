@@ -8,7 +8,7 @@ function Footer() {
           <div>
             <h4>Get in touch</h4>
             <p style={{ margin: 0, maxWidth: '32ch', color: 'var(--ink-2)' }}>
-              For collaborations, papers, or borrowing a model — drop a line.
+              For collaborations, papers, or borrowing a model, drop a line.
             </p>
             <a className="footer-contact" href="mailto:hello@vantagelabs.dev">
               hello@vantagelabs.dev <span>↗</span>

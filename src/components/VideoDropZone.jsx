@@ -15,7 +15,7 @@ function formatBytes(bytes) {
 }
 
 function formatDuration(seconds) {
-  if (seconds == null || !isFinite(seconds) || seconds < 0) return '—';
+  if (seconds == null || !isFinite(seconds) || seconds < 0) return '-';
   const total = Math.floor(seconds);
   const h = Math.floor(total / 3600);
   const m = Math.floor((total % 3600) / 60);
@@ -52,7 +52,7 @@ function VideoDropZone({ onExtract }) {
       return;
     }
     if (f.size > MAX_BYTES) {
-      setError(`That video is ${formatBytes(f.size)} — please keep it under 500 MB.`);
+      setError(`That video is ${formatBytes(f.size)}. Please keep it under 500 MB.`);
       return;
     }
     setFile(f);

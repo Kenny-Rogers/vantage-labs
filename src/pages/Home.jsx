@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Stripes,
@@ -6,7 +5,6 @@ import {
   MaskOverlay,
   HeatOverlay,
   EdgeOverlay,
-  ScanReticle,
 } from '../components/CVPrimitives';
 
 const PROJECTS = [
@@ -14,7 +12,7 @@ const PROJECTS = [
     n: '01',
     title: 'Frame Extractor',
     kind: 'Frame Extraction',
-    desc: 'Pull high-resolution stills from any video at a chosen interval. Runs entirely in your browser via Canvas API — no upload, no server.',
+    desc: 'Pull high-resolution stills from any video at a chosen interval. Runs entirely in your browser via Canvas API. No upload, no server.',
     overlay: 'edges',
     hue: 'cool',
     img: 'frame_stream.mp4',
@@ -46,7 +44,7 @@ const PROJECTS = [
     n: '03',
     title: 'Color Segmentation',
     kind: 'Semantic Segmentation',
-    desc: 'Classify aerial imagery into vegetation, water, and built areas using HSV thresholds — a small, transparent baseline before learning-based segmenters.',
+    desc: 'Classify aerial imagery into vegetation, water, and built areas using HSV thresholds. A small, transparent baseline before learning-based segmenters.',
     overlay: 'mask',
     hue: 'forest',
     img: 'meadow_07.jpg',
@@ -61,7 +59,7 @@ const PROJECTS = [
     n: '04',
     title: 'Object Detection',
     kind: 'Object Detection',
-    desc: 'YOLOv8 in the browser via ONNX Runtime Web. No upload, no server — your images never leave your machine.',
+    desc: 'YOLOv8 in the browser via ONNX Runtime Web. No upload, no server. Your images never leave your machine.',
     overlay: 'boxes',
     hue: 'dusk',
     img: 'street_22.jpg',
@@ -105,17 +103,6 @@ const PROJECTS = [
   },
 ];
 
-const HERO_BOXES = [
-  { x: 12, y: 22, w: 28, h: 38, label: 'person', conf: '0.97' },
-  { x: 52, y: 30, w: 22, h: 30, label: 'bicycle', conf: '0.88' },
-  { x: 72, y: 58, w: 18, h: 16, label: 'dog', conf: '0.81' },
-];
-const HERO_SEG = [
-  { d: 'M5 60 C 25 40, 50 70, 95 55 L 95 100 L 5 100 Z', c: 'var(--accent)' },
-  { d: 'M15 18 q15 -10 30 0 q10 8 0 22 q-15 8 -30 0 z', c: '#3a3a37' },
-  { d: 'M55 32 q12 -6 24 4 q6 18 -8 26 q-18 4 -22 -10 z', c: '#6a624c' },
-];
-
 const SAMPLE_BOXES = [
   { x: 18, y: 30, w: 24, h: 40, label: 'person', conf: '0.94' },
   { x: 52, y: 42, w: 28, h: 30, label: 'bicycle', conf: '0.86' },
@@ -125,34 +112,7 @@ const SAMPLE_SEG = [
   { d: 'M20 14 q14 -8 28 4 q4 14 -10 22 q-18 4 -22 -8 z', c: '#3a3a37' },
 ];
 
-const MODES = ['detect', 'segment', 'depth', 'edges'];
-
 function Hero() {
-  const [mode, setMode] = useState('detect');
-  const [auto, setAuto] = useState(true);
-
-  useEffect(() => {
-    if (!auto) return;
-    const id = setInterval(() => {
-      setMode((m) => MODES[(MODES.indexOf(m) + 1) % MODES.length]);
-    }, 2800);
-    return () => clearInterval(id);
-  }, [auto]);
-
-  const cornerStyle = (t, r, b, l) => ({
-    position: 'absolute',
-    top: t != null ? t : undefined,
-    right: r != null ? r : undefined,
-    bottom: b != null ? b : undefined,
-    left: l != null ? l : undefined,
-    width: 14,
-    height: 14,
-    borderTop: t != null ? '1px solid var(--accent)' : 'none',
-    borderLeft: l != null ? '1px solid var(--accent)' : 'none',
-    borderRight: r != null ? '1px solid var(--accent)' : 'none',
-    borderBottom: b != null ? '1px solid var(--accent)' : 'none',
-  });
-
   return (
     <header className="hero-section">
       <div className="wrap">
@@ -167,8 +127,8 @@ function Hero() {
 
         <div className="hero-grid">
           <p className="lead" style={{ maxWidth: '44ch' }}>
-            A working studio for computer-vision systems — detectors,
-            segmenters, pose estimators, depth networks — built to run on
+            A working studio for computer-vision systems: detectors,
+            segmenters, pose estimators, depth networks, built to run on
             everyday photographs, not just aerial footage.
           </p>
 
@@ -198,63 +158,6 @@ function Hero() {
             </div>
           </div>
         </div>
-
-        <div style={{ marginTop: 'clamp(40px, 6vw, 80px)' }}>
-          <div className="mono hero-frame-meta">
-            <span>fig.01 — live inference frame · 1280×720 · ~24 fps</span>
-            <span>{auto ? '▶ auto-cycle' : '⏸ paused'}</span>
-          </div>
-
-          <div className="hero-frame">
-            <Stripes
-              seed={3}
-              hue="dusk"
-              label="street_scene_03.jpg"
-              caption="placeholder"
-            />
-
-            <BoxesOverlay boxes={HERO_BOXES} visible={mode === 'detect'} />
-            <MaskOverlay paths={HERO_SEG} visible={mode === 'segment'} />
-            <HeatOverlay mode="depth" visible={mode === 'depth'} seed={1} />
-            <EdgeOverlay visible={mode === 'edges'} seed={9} />
-            <ScanReticle active />
-
-            <div className="frame-corner" style={cornerStyle(8, null, null, 8)} />
-            <div className="frame-corner" style={cornerStyle(8, 8, null, null)} />
-            <div className="frame-corner" style={cornerStyle(null, null, 8, 8)} />
-            <div className="frame-corner" style={cornerStyle(null, 8, 8, null)} />
-
-            <div className="frame-hud">
-              <span className="frame-hud-dot" />
-              <span>MODE · {mode.toUpperCase()}</span>
-            </div>
-          </div>
-
-          <div className="hero-mode-tabs">
-            {MODES.map((m) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => {
-                  setAuto(false);
-                  setMode(m);
-                }}
-                data-active={mode === m}
-                className="hero-mode-btn"
-              >
-                <span className="hero-mode-num">{`0${MODES.indexOf(m) + 1}`}</span>
-                {m}
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() => setAuto((a) => !a)}
-              className="hero-pause"
-            >
-              {auto ? 'pause cycle' : 'resume cycle'}
-            </button>
-          </div>
-        </div>
       </div>
     </header>
   );
@@ -267,7 +170,7 @@ function ProjectCard({ p, idx }) {
         to={p.href}
         className="project-card-image"
         style={{ display: 'block', position: 'relative', aspectRatio: 'inherit' }}
-        aria-label={`${p.title} — ${p.kind}`}
+        aria-label={`${p.title}: ${p.kind}`}
       >
         <Stripes
           seed={idx + 7}
@@ -325,7 +228,7 @@ function ProjectsIndex() {
     <ol className="projects-index">
       {PROJECTS.map((p) => (
         <li key={p.n} onClick={(e) => {
-          // Make the whole row clickable — navigate via the inner Link
+          // Make the whole row clickable, navigating via the inner Link
           const link = e.currentTarget.querySelector('a');
           if (link && e.target.tagName !== 'A') link.click();
         }}>
@@ -350,7 +253,7 @@ function Projects() {
         <div className="projects-header">
           <div>
             <div className="mono eyebrow" style={{ marginBottom: 18 }}>
-              <span>§ Selected work · 2024 — 2026 · 06 entries</span>
+              <span>§ Selected work · 2024-2026 · 06 entries</span>
             </div>
             <h2>
               An index of <span className="italic">visual</span> systems,
@@ -392,7 +295,7 @@ function About() {
           <div className="about-body">
             <p>
               VantageLabs began as a sandbox for drone footage. It's since
-              broadened into a working studio for vision systems on any image —
+              broadened into a working studio for vision systems on any image:
               streets, studios, manuscripts, kitchens.
             </p>
             <p>

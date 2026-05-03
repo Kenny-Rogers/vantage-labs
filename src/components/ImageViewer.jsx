@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 function formatTimestamp(seconds) {
-  if (seconds == null || !isFinite(seconds) || seconds < 0) return '—';
+  if (seconds == null || !isFinite(seconds) || seconds < 0) return '-';
   const total = Math.floor(seconds);
   const h = Math.floor(total / 3600);
   const m = Math.floor((total % 3600) / 60);
