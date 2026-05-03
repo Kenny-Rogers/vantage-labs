@@ -4,9 +4,9 @@
 
 **Computer vision tools for aerial and video footage that run entirely in your browser**
 
-[Live Demo](https://USERNAME.github.io/vantage-labs/) · [Available Tools](#available-tools) · [How It Works](#how-it-works) · [Run Locally](#run-locally)
+[Live Demo](https://labs.lodonu.dev/) · [Available Tools](#available-tools) · [How It Works](#how-it-works) · [Run Locally](#run-locally)
 
-[![Live Demo](https://img.shields.io/badge/demo-live-0d9488?style=flat-square)](https://USERNAME.github.io/vantage-labs/)
+[![Live Demo](https://img.shields.io/badge/demo-labs.lodonu.dev-b15a2c?style=flat-square)](https://labs.lodonu.dev/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-64748b?style=flat-square)](LICENSE)
 [![React](https://img.shields.io/badge/react-19-0d9488?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![Made in Ghana](https://img.shields.io/badge/made%20in-Accra-64748b?style=flat-square)](#about)
@@ -78,13 +78,13 @@ For heavier algorithms that don't fit comfortably in JavaScript, the same logic 
 ## Run Locally
 
 ```bash
-git clone git@github.com:USERNAME/vantage-labs.git
+git clone git@github.com:Kenny-Rogers/vantage-labs.git
 cd vantage-labs
 npm install
 npm start
 ```
 
-The app runs at <http://localhost:3000/vantage-labs/>. Drop in any MP4, MOV, or WebM up to 500 MB.
+The app runs at <http://localhost:3000/>. Drop in any MP4, MOV, or WebM up to 500 MB.
 
 To produce a production build:
 

@@ -1,0 +1,5 @@
+# Cloudflare Pages SPA fallback.
+# Any path that isn't a real static asset falls through to index.html so
+# React Router handles the route on the client. Without this, deep-link
+# reloads (e.g. /frame-extractor) would 404.
+/*    /index.html   200
