@@ -2,42 +2,62 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0d9488" />
+
+    <title>VantageLabs — Computer Vision Tools for Aerial Footage</title>
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="Extract the best frames from your drone footage. Free, private, runs entirely in your browser."
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <link rel="canonical" href="https://kenny-rogers.github.io/vantage-labs/" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Open Graph (Facebook, LinkedIn, WhatsApp, Instagram link previews) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VantageLabs" />
+    <meta property="og:url" content="https://kenny-rogers.github.io/vantage-labs/" />
+    <meta property="og:title" content="VantageLabs — Computer Vision Tools for Aerial Footage" />
+    <meta
+      property="og:description"
+      content="Extract the best frames from your drone footage. Free, private, runs entirely in your browser."
+    />
+    <meta property="og:image" content="https://kenny-rogers.github.io/vantage-labs/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="VantageLabs — Computer Vision Tools for Aerial Footage" />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://kenny-rogers.github.io/vantage-labs/" />
+    <meta name="twitter:title" content="VantageLabs — Computer Vision Tools for Aerial Footage" />
+    <meta
+      name="twitter:description"
+      content="Extract the best frames from your drone footage. Free, private, runs entirely in your browser."
+    />
+    <meta name="twitter:image" content="https://kenny-rogers.github.io/vantage-labs/og-image.png" />
+    <meta name="twitter:image:alt" content="VantageLabs — Computer Vision Tools for Aerial Footage" />
+
+    <!-- GitHub Pages SPA fallback: 404.html sets ?/<path> in the query.
+         Decode it back into a clean URL before React Router boots. -->
+    <script type="text/javascript">
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) { return s.replace(/~and~/g, '&'); })
+            .join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      }(window.location));
+    </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>VantageLabs needs JavaScript to run. Please enable it and reload.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>
