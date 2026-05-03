@@ -1,11 +1,22 @@
 """
-Frame extraction from video using OpenCV.
+Frame extraction + per-frame analysis using OpenCV / numpy / PIL.
 
 The Python sibling of src/utils/videoProcessor.js — same defaults, same
 behavior — so the standalone CLI tool and the in-browser tool stay aligned.
-The same `extract_frames` function will later be loaded by Pyodide in the
-browser, which is why the core logic is in a clean function and not buried
-in the argparse/CLI layer.
+The functions in this module are loaded by Pyodide in the browser, which
+is why the core logic is in plain functions and not buried in argparse.
+
+Two entry points:
+
+  extract_frames(video_path, ...)
+      Walks a video file's clock and writes JPEG frames. CLI-only —
+      requires cv2 (FFmpeg-backed VideoCapture).
+
+  analyze_frame(image_data)
+      Scores a single image (sharpness via Laplacian variance, mean
+      brightness). Accepts a base64 string, raw bytes, or a numpy
+      ndarray. Used by the browser to score each Canvas-extracted frame
+      via Pyodide.
 
 Usage as a script:
     python3 extractor.py path/to/video.mp4
@@ -13,16 +24,21 @@ Usage as a script:
     python3 extractor.py video.mp4 --quality 90
 
 Usage as a library:
-    from extractor import extract_frames
-    frames = extract_frames("video.mp4", interval=2.0)
+    from extractor import extract_frames, analyze_frame
+    frames  = extract_frames("video.mp4", interval=2.0)
+    metrics = analyze_frame(open("frame.jpg", "rb").read())
 """
 
 import argparse
+import base64
+import io
 import sys
 import time
 from pathlib import Path
 
-import cv2  # provided by `pip install opencv-python`
+# cv2 is heavy and only needed for the CLI's video-decoding path. Importing
+# it lazily inside _open_capture keeps the module loadable under Pyodide,
+# where opencv-python is available via micropip but not bundled by default.
 
 
 def _open_capture(video_path):
@@ -44,6 +60,8 @@ def _open_capture(video_path):
     Raises:  ValueError if open or metadata read fails. The capture is
              released before raising so we don't leak handles.
     """
+    import cv2  # local import; see module docstring
+
     cap = cv2.VideoCapture(str(video_path))
     if not cap.isOpened():
         raise ValueError(
@@ -116,6 +134,8 @@ def extract_frames(
         ValueError: If args are bad, the file can't be opened, or the video's
                     duration/dimensions can't be read.
     """
+    import cv2  # local import; see module docstring
+
     video_path = Path(video_path)
     if not video_path.exists():
         raise FileNotFoundError(f"Video file not found: {video_path}")
@@ -197,6 +217,102 @@ def extract_frames(
         cap.release()
 
 
+def analyze_frame(image_data):
+    """
+    Score a single frame for sharpness and brightness.
+
+    Designed for the browser path: Pyodide hands us each Canvas-extracted
+    frame and we compute a Laplacian-variance focus score plus mean
+    luminance. Returns plain Python types so Pyodide can convert the
+    result straight into a JS object.
+
+    Args:
+        image_data: One of
+          - base64 string (with or without `data:` URL prefix)
+          - bytes / bytearray (raw JPEG/PNG/etc. file contents)
+          - numpy.ndarray of shape (H, W) or (H, W, 3), dtype uint8
+
+    Returns:
+        dict with:
+          width, height       — int pixels
+          sharpness           — float, Laplacian variance (higher = sharper)
+          mean_brightness     — float in [0, 255]
+
+    Raises:
+        TypeError if image_data is none of the supported types.
+        ValueError if bytes can't be decoded as an image.
+    """
+    import numpy as np
+
+    if isinstance(image_data, np.ndarray):
+        return _analyze_array(image_data)
+
+    if isinstance(image_data, str):
+        # Strip data URL prefix if present (e.g. "data:image/jpeg;base64,...")
+        if image_data.startswith("data:"):
+            image_data = image_data.split(",", 1)[1]
+        img_bytes = base64.b64decode(image_data)
+    elif isinstance(image_data, (bytes, bytearray)):
+        img_bytes = bytes(image_data)
+    else:
+        raise TypeError(
+            f"Unsupported image_data type: {type(image_data).__name__}. "
+            "Pass a base64 str, bytes, or a numpy ndarray."
+        )
+
+    # Decode JPEG/PNG bytes via Pillow. Pillow is light, pre-built for
+    # Pyodide, and avoids pulling in cv2 just to decode an image.
+    from PIL import Image
+
+    try:
+        with Image.open(io.BytesIO(img_bytes)) as im:
+            im.load()
+            arr = np.asarray(im.convert("RGB"))
+    except Exception as e:  # noqa: BLE001  (Pillow raises a stew of types)
+        raise ValueError(f"Could not decode image bytes: {e}") from e
+
+    return _analyze_array(arr)
+
+
+def _analyze_array(img):
+    """Compute sharpness + brightness for a numpy image array.
+
+    Uses a numpy-only Laplacian (no cv2 dependency), so this works in
+    Pyodide with just numpy + Pillow loaded — no opencv-python needed.
+    """
+    import numpy as np
+
+    h, w = img.shape[:2]
+
+    # Luminance via standard weights. Works for either BGR or RGB inputs
+    # because we only use the result to compute variance.
+    if img.ndim == 3:
+        gray = (
+            0.299 * img[..., 0]
+            + 0.587 * img[..., 1]
+            + 0.114 * img[..., 2]
+        ).astype(np.float32)
+    else:
+        gray = img.astype(np.float32)
+
+    # Discrete 4-neighbour Laplacian via array slicing.
+    # Kernel: [[0,1,0],[1,-4,1],[0,1,0]]
+    lap = (
+        -4 * gray[1:-1, 1:-1]
+        + gray[:-2, 1:-1]
+        + gray[2:, 1:-1]
+        + gray[1:-1, :-2]
+        + gray[1:-1, 2:]
+    )
+
+    return {
+        "width": int(w),
+        "height": int(h),
+        "sharpness": float(lap.var()),
+        "mean_brightness": float(gray.mean()),
+    }
+
+
 def _build_parser():
     parser = argparse.ArgumentParser(
         description="Extract still frames from a video at a fixed interval, using OpenCV.",
@@ -266,5 +382,8 @@ def main(argv=None):
     return 0
 
 
-if __name__ == "__main__":
+# Skip the CLI entry point under Pyodide. Pyodide's runPython sets
+# __name__ == "__main__" by default, which would otherwise call main() →
+# argparse → SystemExit when we import this module from the browser.
+if __name__ == "__main__" and sys.platform != "emscripten":
     sys.exit(main())
