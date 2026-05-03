@@ -3,9 +3,76 @@ const GITHUB_URL = 'https://github.com/Kenny-Rogers/vantage-labs';
 function Footer() {
   return (
     <footer className="footer">
-      <div className="container footer-inner">
-        <span>Built by [Your Name] in Accra, Ghana</span>
-        <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>
+      <div className="wrap">
+        <div className="footer-grid">
+          <div>
+            <h4>Get in touch</h4>
+            <p style={{ margin: 0, maxWidth: '32ch', color: 'var(--ink-2)' }}>
+              For collaborations, papers, or borrowing a model — drop a line.
+            </p>
+            <a className="footer-contact" href="mailto:hello@vantagelabs.dev">
+              hello@vantagelabs.dev <span>↗</span>
+            </a>
+          </div>
+          <div>
+            <h4>Work</h4>
+            <ul>
+              <li><a href="/#work">All projects</a></li>
+              <li><a href="/frame-extractor">Frame Extractor</a></li>
+              <li><a href="/#about">About</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Elsewhere</h4>
+            <ul>
+              <li>
+                <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
+                  GitHub ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://huggingface.co/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Hugging Face ↗
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`${GITHUB_URL}/issues`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Notes ↗
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4>Subscribe</h4>
+            <p style={{ margin: 0, color: 'var(--ink-2)', fontSize: 13 }}>
+              Quarterly notes, no spam.
+            </p>
+            <form
+              className="footer-form"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <input type="email" placeholder="you@somewhere" />
+              <button type="submit" aria-label="Subscribe">↵</button>
+            </form>
+          </div>
+        </div>
+
+        <div className="bigmark">
+          Vantage<em>Labs</em>
+        </div>
+
+        <div className="colofon">
+          <div className="mono">© MMXXVI · Vantage Labs · Built by hand</div>
+          <div className="mono">Built in Accra, Ghana</div>
+        </div>
       </div>
     </footer>
   );
