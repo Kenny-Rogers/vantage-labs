@@ -57,10 +57,26 @@ const PORT = 5500;
   await new Promise((resolve) => server.listen(PORT, resolve));
   console.log(`[prerender] static server on :${PORT}`);
 
-  const browser = await puppeteer.launch({
-    headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  });
+  // Cloudflare Pages' build container ships without GUI shared libs
+  // (libatk, libnss, libgbm, …), so Puppeteer's bundled Chrome can't
+  // launch there. Skip prerender on launch failure instead of killing
+  // the deploy — the SPA still ships, just without crawler-friendly
+  // pre-rendered HTML for this build. Local builds (where Chrome works)
+  // continue to prerender normally.
+  let browser;
+  try {
+    browser = await puppeteer.launch({
+      headless: 'new',
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+  } catch (err) {
+    console.warn(
+      `[prerender] skipping — Chrome launch failed (${err.message.split('\n')[0]}). ` +
+        `Build will ship as SPA without prerendered HTML.`
+    );
+    server.close();
+    return;
+  }
 
   let ok = 0;
   let fail = 0;
