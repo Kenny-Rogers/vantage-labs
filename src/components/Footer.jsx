@@ -1,6 +1,38 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const GITHUB_URL = 'https://github.com/Kenny-Rogers/vantage-labs';
+const EMAIL = 'contact@lodonu.dev';
+
+function CopyEmailButton() {
+  const [copied, setCopied] = useState(false);
+  const onClick = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = EMAIL;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1600);
+  };
+  return (
+    <button
+      type="button"
+      className="footer-copy"
+      onClick={onClick}
+      aria-label={copied ? 'Email copied' : 'Copy email address'}
+    >
+      {copied ? 'copied' : 'copy'}
+    </button>
+  );
+}
 
 function Footer() {
   return (
@@ -12,9 +44,12 @@ function Footer() {
             <p style={{ margin: 0, maxWidth: '32ch', color: 'var(--ink-2)' }}>
               For collaborations, papers, or borrowing a model, drop a line.
             </p>
-            <a className="footer-contact" href="mailto:contact@lodonu.dev">
-              contact@lodonu.dev <span>↗</span>
-            </a>
+            <div className="footer-contact-row">
+              <a className="footer-contact" href={`mailto:${EMAIL}`}>
+                {EMAIL} <span>↗</span>
+              </a>
+              <CopyEmailButton />
+            </div>
           </div>
           <div>
             <h4>Work</h4>
