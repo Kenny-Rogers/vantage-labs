@@ -1,8 +1,8 @@
 :root {
-  /* Editorial aesthetic system — warm off-white paper, off-black ink, rust accent. */
-  --bg: #f3f0e8;
-  --bg-soft: #ebe7dc; /* alias for design's --bg-2 */
-  --bg-2: #ebe7dc;
+  /* Swiss aesthetic system — cool neutral grey, off-black ink, blue accent, Inter throughout. */
+  --bg: #f4f4f2;
+  --bg-soft: #ececea; /* alias for design's --bg-2 */
+  --bg-2: #ececea;
   --text: #1a1a17; /* alias for design's --ink */
   --ink: #1a1a17;
   --ink-2: #2a2924;
@@ -10,10 +10,10 @@
   --line: rgba(26, 26, 23, 0.14);
   --line-strong: rgba(26, 26, 23, 0.28);
   --border: rgba(26, 26, 23, 0.14); /* alias for --line */
-  --accent: oklch(58% 0.13 50); /* warm rust */
-  --accent-dark: oklch(48% 0.13 45);
+  --accent: oklch(55% 0.14 250); /* swiss blue */
+  --accent-dark: oklch(45% 0.14 250);
 
-  --serif: 'Fraunces', 'Iowan Old Style', 'Georgia', serif;
+  --serif: 'Inter', system-ui, sans-serif;
   --sans: 'Inter', -apple-system, 'Helvetica Neue', system-ui, sans-serif;
   --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
 
