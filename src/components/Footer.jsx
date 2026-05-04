@@ -68,21 +68,12 @@ function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Lodonu ↗
+                  lodonu.dev ↗
                 </a>
               </li>
               <li>
                 <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
                   GitHub ↗
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://huggingface.co/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Hugging Face ↗
                 </a>
               </li>
               <li>
@@ -94,21 +85,18 @@ function Footer() {
                   Notes ↗
                 </a>
               </li>
+              <li>
+                <a
+                  href="https://huggingface.co/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Hugging Face ↗
+                </a>
+              </li>
             </ul>
           </div>
-          <div>
-            <h4>Subscribe</h4>
-            <p style={{ margin: 0, color: 'var(--ink-2)', fontSize: 13 }}>
-              Quarterly notes, no spam.
-            </p>
-            <form
-              className="footer-form"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <input type="email" placeholder="you@somewhere" />
-              <button type="submit" aria-label="Subscribe">↵</button>
-            </form>
-          </div>
+          {/* Subscribe column hidden until newsletter wiring is decided. */}
         </div>
 
         <div className="bigmark">
