@@ -1,0 +1,5 @@
+# Default reviewer for everything in this repo.
+# GitHub auto-requests code owners as reviewers on any PR they didn't open
+# themselves. See: https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @Kenny-Rogers
