@@ -8,7 +8,7 @@ function Header() {
       <div className="wrap nav-row">
         <Link to="/" className="brand">
           <span className="mark" aria-hidden="true"></span>
-          Vantage<span className="italic">Labs</span>
+          <span>Vantage<span className="italic">Labs</span></span>
         </Link>
         <ul className="nav-list">
           <li>
