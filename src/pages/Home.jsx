@@ -280,52 +280,6 @@ function Projects() {
   );
 }
 
-function About() {
-  return (
-    <section id="about">
-      <div className="wrap">
-        <div className="about-grid">
-          <div>
-            <div className="mono eyebrow" style={{ marginBottom: 18 }}>
-              <span>§ Notes from the lab</span>
-            </div>
-            <h2>
-              A practice, not a <span className="italic">product</span>.
-            </h2>
-          </div>
-          <div className="about-body">
-            <p>
-              VantageLabs began as a sandbox for drone footage. It's since
-              broadened into a working studio for vision systems on any image:
-              streets, studios, manuscripts, kitchens.
-            </p>
-            <p>
-              Each project is built end to end: data, training, evaluation, and
-              a small artefact you can try in the browser. Code, weights, and
-              the things that didn't work are written down alongside the things
-              that did.
-            </p>
-          </div>
-        </div>
-
-        <div className="stats-grid">
-          {[
-            ['01', 'Live tool'],
-            ['05', 'In progress'],
-            ['100%', 'In-browser'],
-            ['MIT', 'License, where I can'],
-          ].map(([k, v]) => (
-            <div key={v}>
-              <div className="stat-num">{k}</div>
-              <div className="mono" style={{ marginTop: 10 }}>{v}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function Home() {
   return (
     <>
@@ -342,7 +296,6 @@ function Home() {
         <div className="hairline" style={{ marginTop: 60 }} />
       </div>
       <Projects />
-      <About />
     </>
   );
 }

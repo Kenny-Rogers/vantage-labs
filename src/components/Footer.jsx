@@ -56,7 +56,6 @@ function Footer() {
             <ul>
               <li><Link to="/#work">All projects</Link></li>
               <li><Link to="/frame-extractor">Frame Extractor</Link></li>
-              <li><Link to="/#about">About</Link></li>
             </ul>
           </div>
           <div>
