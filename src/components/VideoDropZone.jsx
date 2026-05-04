@@ -1,8 +1,32 @@
 import { useState, useRef, useEffect } from 'react';
 
-const MAX_BYTES = 500 * 1024 * 1024;
 const ACCEPTED_TYPES = ['video/mp4', 'video/quicktime', 'video/webm'];
 const ACCEPTED_EXTENSIONS = ['.mp4', '.mov', '.webm'];
+
+// Conservative default used during SSR/prerender, before client detection runs.
+const DEFAULT_LIMITS = { maxMB: 500, warnMB: 300 };
+
+// Picks an upload size tier based on device capability. Computed on the client
+// only — we never trust SSR/prerender to know the user's device. Mobile UA is
+// always treated as low-tier because iOS Safari doesn't expose deviceMemory and
+// kills tabs around ~1 GB resident.
+function getDeviceTier() {
+  if (typeof navigator === 'undefined') return DEFAULT_LIMITS;
+  const ua = navigator.userAgent || '';
+  if (/Mobi|Android|iPhone|iPad|iPod/i.test(ua)) {
+    return { maxMB: 250, warnMB: 150 };
+  }
+  const mem = navigator.deviceMemory;
+  if (mem == null) return DEFAULT_LIMITS; // Safari/Firefox don't expose this.
+  if (mem <= 2) return { maxMB: 250, warnMB: 150 };
+  if (mem <= 4) return { maxMB: 500, warnMB: 300 };
+  if (mem <= 8) return { maxMB: 1024, warnMB: 600 };
+  return { maxMB: 2048, warnMB: 1024 };
+}
+
+function formatLimit(mb) {
+  return mb >= 1024 ? `${(mb / 1024).toFixed(mb % 1024 === 0 ? 0 : 1)} GB` : `${mb} MB`;
+}
 
 function formatBytes(bytes) {
   if (bytes < 1024) return `${bytes} B`;
@@ -36,8 +60,15 @@ function VideoDropZone({ onExtract }) {
   const [duration, setDuration] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState(null);
+  const [warning, setWarning] = useState(null);
+  const [limits, setLimits] = useState(DEFAULT_LIMITS);
   const inputRef = useRef(null);
   const dragDepth = useRef(0);
+
+  // Resolve real device-aware limits on the client only, after hydration.
+  useEffect(() => {
+    setLimits(getDeviceTier());
+  }, []);
 
   // Revoke any object URL when it changes or on unmount
   useEffect(() => {
@@ -47,18 +78,27 @@ function VideoDropZone({ onExtract }) {
   }, [videoUrl]);
 
   const acceptFile = (f) => {
+    const maxBytes = limits.maxMB * 1024 * 1024;
+    const warnBytes = limits.warnMB * 1024 * 1024;
     if (!isAcceptedVideo(f)) {
       setError("That file format isn't supported. Try an MP4, MOV, or WebM video.");
       return;
     }
-    if (f.size > MAX_BYTES) {
-      setError(`That video is ${formatBytes(f.size)}. Please keep it under 500 MB.`);
+    if (f.size > maxBytes) {
+      setError(
+        `That video is ${formatBytes(f.size)}. On this device, please keep it under ${formatLimit(limits.maxMB)}.`,
+      );
       return;
     }
     setFile(f);
     setVideoUrl(URL.createObjectURL(f));
     setDuration(null);
     setError(null);
+    setWarning(
+      f.size > warnBytes
+        ? `Large video (${formatBytes(f.size)}). Extraction may take a few minutes and use significant memory — closing other tabs first will help.`
+        : null,
+    );
   };
 
   const reset = () => {
@@ -66,6 +106,7 @@ function VideoDropZone({ onExtract }) {
     setVideoUrl(null);
     setDuration(null);
     setError(null);
+    setWarning(null);
     if (inputRef.current) inputRef.current.value = '';
   };
 
@@ -142,7 +183,9 @@ function VideoDropZone({ onExtract }) {
             </svg>
             <p className="drop-title">Drop a video here</p>
             <p className="drop-hint">or click to select a file</p>
-            <p className="drop-formats">MP4, MOV, or WebM · up to 500 MB</p>
+            <p className="drop-formats">
+              MP4, MOV, or WebM · up to {formatLimit(limits.maxMB)}
+            </p>
           </div>
           {error && (
             <div className="drop-error" role="alert">
@@ -165,6 +208,11 @@ function VideoDropZone({ onExtract }) {
             <span className="video-meta-dot" aria-hidden="true">·</span>
             <span>{formatDuration(duration)}</span>
           </div>
+          {warning && (
+            <div className="drop-warning" role="status">
+              {warning}
+            </div>
+          )}
           <div className="video-actions">
             <button
               type="button"

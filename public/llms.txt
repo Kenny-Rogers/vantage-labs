@@ -8,7 +8,7 @@ The site is built and maintained by Kenny Rogers, an engineer based in Accra, Gh
 
 ## Available now
 
-- [Frame Extractor](https://vantage.lodonu.dev/frame-extractor) — pull high-resolution stills from any video file at a chosen interval. Runs entirely in-browser via HTML5 Video + Canvas API. Optional Python engine (Pyodide) computes Laplacian-variance sharpness scores per extracted frame. Supports MP4, MOV, and WebM up to 500 MB. Lets users download a single frame as JPEG or all frames as a ZIP.
+- [Frame Extractor](https://vantage.lodonu.dev/frame-extractor) — pull high-resolution stills from any video file at a chosen interval. Runs entirely in-browser via HTML5 Video + Canvas API. Optional Python engine (Pyodide) computes Laplacian-variance sharpness scores per extracted frame. Supports MP4, MOV, and WebM with a device-aware size limit (250 MB on phones and low-memory devices, up to 2 GB on capable desktops; chosen at runtime from `navigator.deviceMemory` and the user-agent). Lets users download a single frame as JPEG or all frames as a ZIP.
 
 ## Coming soon
 

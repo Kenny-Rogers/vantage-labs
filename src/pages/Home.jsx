@@ -22,7 +22,7 @@ const PROJECTS = [
     span: 'wide',
     metrics: [
       ['formats', 'MP4·MOV·WebM'],
-      ['max size', '500 MB'],
+      ['max size', 'device-aware'],
       ['runtime', 'in-browser'],
     ],
   },
