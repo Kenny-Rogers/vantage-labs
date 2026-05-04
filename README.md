@@ -1,17 +1,20 @@
 <div align="center">
 
+<img src="public/favicon.svg" alt="VantageLabs logo" width="72" height="72" />
+
 # VantageLabs
 
-**Computer vision tools for aerial and video footage that run entirely in your browser**
+**Computer-vision tools for aerial and video footage that run entirely in your browser.**
 
-[Live Demo](https://vantage.lodonu.dev/) · [Available Tools](#available-tools) · [How It Works](#how-it-works) · [Run Locally](#run-locally)
+[Live site](https://vantage.lodonu.dev/) · [Available tools](#available-tools) · [How it works](#how-it-works) · [Run locally](#run-locally) · [Deploying](#deploying)
 
-[![Live Demo](https://img.shields.io/badge/demo-vantage.lodonu.dev-b15a2c?style=flat-square)](https://vantage.lodonu.dev/)
+[![Live](https://img.shields.io/badge/live-vantage.lodonu.dev-2563eb?style=flat-square)](https://vantage.lodonu.dev/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-64748b?style=flat-square)](LICENSE)
-[![React](https://img.shields.io/badge/react-19-0d9488?style=flat-square&logo=react&logoColor=white)](https://react.dev)
-[![Made in Ghana](https://img.shields.io/badge/made%20in-Accra-64748b?style=flat-square)](#about)
+[![React 19](https://img.shields.io/badge/react-19-0d9488?style=flat-square&logo=react&logoColor=white)](https://react.dev)
+[![Cloudflare Workers](https://img.shields.io/badge/hosting-Cloudflare%20Workers-f38020?style=flat-square&logo=cloudflare&logoColor=white)](https://developers.cloudflare.com/workers/)
+[![Made in Accra](https://img.shields.io/badge/made%20in-Accra-64748b?style=flat-square)](#about)
 
-![VantageLabs](docs/screenshots/hero.png)
+![VantageLabs home](docs/screenshots/hero.png)
 
 </div>
 
@@ -19,22 +22,22 @@
 
 ## What is VantageLabs?
 
-A small, focused toolkit for working with drone footage and video files in the browser. Drop a video in, get the frames out. No upload, no server, no account.
+A focused toolkit for working with drone footage and video files in the browser. Drop a video in, get the frames out. No upload, no server, no account.
 
-The same computer-vision logic ships twice: once as TypeScript-style JavaScript that runs on the user's GPU/CPU via the Canvas API, and once as Python that runs locally on your machine (and, soon, in the same browser tab via [Pyodide](https://pyodide.org/)).
+The same computer-vision logic ships twice: once as JavaScript that runs on the user's GPU/CPU via the Canvas API, and once as Python under `python/` that the standalone CLI uses today and Pyodide will load directly into the browser tab tomorrow.
 
-## Available Tools
+## Available tools
 
 | Tool | Description | Status |
 | --- | --- | --- |
 | **Frame Extractor** | Extract high-resolution stills from any video at a chosen interval | 🟢 Live |
-| **Sharpness Scorer** | Auto-rank extracted frames by image quality (Laplacian variance) | 🔜 Coming Soon |
-| **Color Segmentation** | Classify aerial imagery into vegetation / water / built areas (HSV thresholds) | 🔜 Coming Soon |
-| **Object Detection** | Detect and count objects in aerial footage (YOLOv8 in-browser via ONNX Runtime Web) | 🔜 Coming Soon |
-| **Traffic Analysis** | Count and track vehicles from above, with a heatmap visualization | 🔜 Coming Soon |
-| **Aerial Mapper** | Stitch overlapping aerial photos into orthomosaic maps | 🔜 Coming Soon |
+| **Sharpness Scorer** | Auto-rank extracted frames by image quality (Laplacian variance) | 🔜 Soon |
+| **Color Segmentation** | Classify aerial imagery into vegetation / water / built areas (HSV thresholds) | 🔜 Soon |
+| **Object Detection** | Detect and count objects in aerial footage (YOLOv8 in-browser via ONNX Runtime Web) | 🔜 Soon |
+| **Traffic Analysis** | Count and track vehicles from above, with a heatmap visualization | 🔜 Soon |
+| **Aerial Mapper** | Stitch overlapping aerial photos into orthomosaic maps | 🔜 Soon |
 
-## How It Works
+## How it works
 
 VantageLabs is a **client-only** app. There is no backend we own. When you drop a video in:
 
@@ -43,39 +46,59 @@ VantageLabs is a **client-only** app. There is no backend we own. When you drop 
 3. The canvas encodes each frame as a JPEG `Blob`, all in your tab's memory.
 4. JSZip (lazy-loaded only when you click *Download All*) bundles the JPEGs into a ZIP.
 
-For heavier algorithms that don't fit comfortably in JavaScript, the same logic is written in Python under `python/` and will load in the browser via Pyodide (same entry points, same defaults) so the standalone CLI tool and the in-browser tool stay aligned. For models that even Pyodide can't carry (large YOLO weights, mapping pipelines), an optional Hugging Face Inference Endpoint is the only network hop.
+For heavier algorithms that don't fit comfortably in JavaScript, the same logic is written in Python under `python/` and will load in the browser via [Pyodide](https://pyodide.org/) (same entry points, same defaults) so the standalone CLI tool and the in-browser tool stay aligned. For models that even Pyodide can't carry (large YOLO weights, mapping pipelines), an optional Hugging Face Inference Endpoint is the only network hop.
 
-## Tech Stack
+### SEO + AI crawlers
 
-- **React 19 + React Router 7**: UI and routing
-- **Canvas API + HTML5 Video**: in-browser frame extraction
-- **JSZip**: client-side ZIP packaging (lazy-loaded chunk)
-- **OpenCV (cv2)**: Python sibling of the in-browser pipeline
-- **Pyodide** *(planned)*: runs the Python tools in the same browser tab
-- **YOLOv8 / ONNX Runtime Web** *(planned)*: object detection without a server
-- **GitHub Pages + GitHub Actions**: static hosting, deploys on push to `main`
+The site is a CRA SPA, but every route ships as fully-rendered HTML for crawlers that don't run JS:
 
-## Project Structure
+- `scripts/prerender.js` runs as a `postbuild` step. It boots a static server against `build/`, drives Puppeteer around each route, and writes the rendered HTML back into `build/<route>/index.html`. `react-helmet-async` populates the per-route `<title>` / `<meta>` first.
+- On the client, `src/index.js` detects a non-empty `#root` and switches from `createRoot` to `hydrateRoot` so React picks up where the snapshot left off.
+- `public/robots.txt`, `public/sitemap.xml`, and `public/llms.txt` (per [llmstxt.org](https://llmstxt.org)) point both classic crawlers and AI agents at every route.
+- A JSON-LD `WebApplication` block in `public/index.html` adds semantic context.
+
+If Puppeteer's Chrome can't launch (missing GUI libs in some build containers), the prerender step gracefully skips and the SPA still ships, just without snapshots.
+
+## Tech stack
+
+- **React 19 + React Router 7** for UI and routing, with `react-helmet-async` for per-route meta.
+- **Canvas API + HTML5 Video** for in-browser frame extraction.
+- **JSZip** for client-side ZIP packaging (lazy-loaded chunk).
+- **OpenCV (cv2)** for the Python sibling of the in-browser pipeline.
+- **Pyodide** *(planned)* runs the Python tools in the same browser tab.
+- **YOLOv8 / ONNX Runtime Web** *(planned)* for object detection without a server.
+- **Cloudflare Workers Assets** for hosting (see [Deploying](#deploying)). SPA fallback handled at the platform level.
+- **GitHub Actions** for CI: install, build, prerender, deploy via Wrangler.
+
+## Project structure
 
 ```
 .
-├── public/                Static assets (favicon, OG image, SPA 404 fallback)
+├── public/                    Static assets (favicon, OG image, robots, sitemap, llms.txt)
 ├── src/
-│   ├── components/        Header, Footer, VideoDropZone, ImageGrid,
-│   │                      ImageViewer, ProgressBar, DownloadButton, ToolCard
-│   ├── pages/             Home, FrameExtractor, and per-tool placeholders
-│   ├── utils/             videoProcessor, downloadHelper, pyodideLoader
-│   ├── App.jsx            Routes
-│   ├── index.js           Mount point + BrowserRouter basename
-│   └── styles.css         Global styles, single accent color
+│   ├── components/            Header (with mobile menu), Footer, VideoDropZone,
+│   │                          ImageGrid, ImageViewer, ProgressBar, DownloadButton,
+│   │                          ToolCard, CVPrimitives (decorative SVGs)
+│   ├── pages/                 Home, FrameExtractor, and per-tool placeholders
+│   ├── utils/                 videoProcessor, downloadHelper, pyodideLoader
+│   ├── App.jsx                Routes + ScrollToTop / hash-link handler
+│   ├── index.js               Mount + hydration switch
+│   └── styles.css             Global styles, single accent color (Swiss blue)
 ├── python/
-│   └── frame_extraction/  CLI sibling of utils/videoProcessor.js (OpenCV)
-├── notebooks/             Jupyter notebooks documenting experiments
-├── docs/                  Architecture and setup notes
-└── .github/workflows/     GitHub Pages deploy
+│   ├── frame_extraction/      CLI sibling of utils/videoProcessor.js (OpenCV)
+│   └── …/                     One module per tool; one will be wired up at a time
+├── notebooks/                 Jupyter notebooks documenting experiments
+├── scripts/
+│   ├── prerender.js           postbuild SEO snapshot via Puppeteer
+│   └── sync-python.js         pre(start|build): copies python/ → public/python/ for Pyodide
+├── docs/                      Architecture, setup notes, screenshots
+├── worker.js                  Minimal Workers entry; forwards to ASSETS binding
+├── wrangler.jsonc             Workers config (assets directory + SPA fallback)
+└── .github/workflows/
+    └── deploy.yml             Build + prerender + deploy on push to main
 ```
 
-## Run Locally
+## Run locally
 
 ```bash
 git clone git@github.com:Kenny-Rogers/vantage-labs.git
@@ -86,13 +109,32 @@ npm start
 
 The app runs at <http://localhost:3000/>. Drop in any MP4, MOV, or WebM up to 500 MB.
 
-To produce a production build:
+To produce a production build (with prerender):
 
 ```bash
 npm run build
 ```
 
-## Python Scripts
+Output lands in `build/` with one `index.html` per route, ready for any static host.
+
+## Deploying
+
+The site is hosted on **Cloudflare Workers Assets** at <https://vantage.lodonu.dev>. Workers Assets serves the prerendered HTML and falls back to `index.html` for unknown routes (SPA mode), configured in `wrangler.jsonc`.
+
+CI is GitHub Actions (`.github/workflows/deploy.yml`):
+
+1. Checkout, install Node 22 + npm deps.
+2. `npm run build` — CRA build → `scripts/prerender.js` snapshots all 7 routes via Puppeteer (ubuntu-latest ships with Chrome's deps).
+3. `cloudflare/wrangler-action@v3` (pinned to wrangler 4.87) runs `wrangler deploy`.
+
+Required GitHub repo secrets:
+
+- `CLOUDFLARE_API_TOKEN` — Workers Scripts: Edit + Account Settings: Read.
+- `CLOUDFLARE_ACCOUNT_ID`.
+
+Cloudflare's git auto-build is intentionally **disconnected** so GitHub Actions is the single deploy path (the Cloudflare build container lacks the GUI libs Puppeteer needs).
+
+## Python scripts
 
 Each tool under `python/` is a standalone CLI. Frame Extractor is the first one wired up:
 
@@ -107,23 +149,26 @@ python3 extractor.py path/to/drone-footage.mp4
 python3 extractor.py drone-footage.mp4 --interval 0.5 --output ./stills --quality 90
 ```
 
-`extract_frames` is also importable as a library; see [python/frame_extraction/README.md](python/frame_extraction/README.md). The same function is what the browser-side Pyodide build will load.
+`extract_frames` is also importable as a library; see [python/frame_extraction/README.md](python/frame_extraction/README.md). The same function is what the in-browser Pyodide build will load.
 
 ## Roadmap
 
-- [x] **Frame Extractor**: Extract high-res stills from any video
-- [x] **Python sibling** for Frame Extractor (OpenCV CLI)
-- [x] **GitHub Pages** deploy + SPA fallback for deep links
-- [ ] **Sharpness Scorer**: Auto-rank by Laplacian variance
-- [ ] **Color Segmentation**: HSV thresholds for vegetation / water / built
-- [ ] **Pyodide integration**: run the Python tools in-browser
-- [ ] **Object Detection**: YOLOv8 in-browser via ONNX Runtime Web
-- [ ] **Traffic Analysis**: vehicle counting with heatmap overlay
-- [ ] **Aerial Mapper**: orthomosaic stitching
+- [x] **Frame Extractor** — extract high-res stills from any video, in-browser
+- [x] **Python sibling** — OpenCV CLI for Frame Extractor
+- [x] **Cloudflare Workers Assets** deploy with SPA fallback
+- [x] **GitHub Actions** CI: build + prerender + deploy
+- [x] **SEO** — per-route prerendered HTML, sitemap, robots, llms.txt, JSON-LD
+- [x] **Mobile nav** — hamburger menu, hash-anchor scrolling under sticky header
+- [ ] **Pyodide integration** — run Python tools in-browser
+- [ ] **Sharpness Scorer** — auto-rank frames by Laplacian variance
+- [ ] **Color Segmentation** — HSV thresholds for vegetation / water / built
+- [ ] **Object Detection** — YOLOv8 in-browser via ONNX Runtime Web
+- [ ] **Traffic Analysis** — vehicle counting with heatmap overlay
+- [ ] **Aerial Mapper** — orthomosaic stitching
 
 ## About
 
-Built by **[Your Name]**, a software engineer in Accra, Ghana, exploring the intersection of aerial footage and computer vision.
+Built by **Kenny Rogers** in Accra, Ghana, exploring the intersection of aerial footage and computer vision. Get in touch at [contact@lodonu.dev](mailto:contact@lodonu.dev) or via [lodonu.dev](https://www.lodonu.dev/).
 
 ## License
 
