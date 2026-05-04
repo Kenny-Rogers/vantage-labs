@@ -85,15 +85,23 @@ const PORT = 5500;
     try {
       const page = await browser.newPage();
       // Block analytics and external font requests during prerender so
-      // the snapshot doesn't capture beacon scripts mid-load.
+      // the snapshot doesn't capture beacon scripts mid-load. Match by
+      // hostname (not substring) so a URL like
+      // `localhost:5500/cloudflareinsights.com.html` doesn't get blocked.
       await page.setRequestInterception(true);
       page.on('request', (req) => {
-        const url = req.url();
-        if (
-          url.includes('cloudflareinsights.com') ||
-          url.includes('fonts.googleapis.com') ||
-          url.includes('fonts.gstatic.com')
-        ) {
+        let host = '';
+        try {
+          host = new URL(req.url()).hostname;
+        } catch {
+          // unparseable URL — let it through
+        }
+        const blocked =
+          host === 'cloudflareinsights.com' ||
+          host.endsWith('.cloudflareinsights.com') ||
+          host === 'fonts.googleapis.com' ||
+          host === 'fonts.gstatic.com';
+        if (blocked) {
           req.abort();
         } else {
           req.continue();
