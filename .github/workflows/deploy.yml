@@ -52,4 +52,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # wrangler-action defaults to 3.90.0, which predates the
+          # Workers Static Assets `not_found_handling` field. Pin a 4.x
+          # release that matches what Cloudflare's managed builds use.
+          wranglerVersion: '4.87.0'
           command: deploy
