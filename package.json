@@ -13,8 +13,7 @@
     "react-dom": "^19.2.5",
     "react-helmet-async": "^3.0.0",
     "react-router-dom": "^7.14.2",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^5.2.0"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "prestart": "node scripts/sync-python.js",
