@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const GITHUB_URL = 'https://github.com/Kenny-Rogers/vantage-labs';
 
 function Footer() {
@@ -17,9 +19,9 @@ function Footer() {
           <div>
             <h4>Work</h4>
             <ul>
-              <li><a href="/#work">All projects</a></li>
-              <li><a href="/frame-extractor">Frame Extractor</a></li>
-              <li><a href="/#about">About</a></li>
+              <li><Link to="/#work">All projects</Link></li>
+              <li><Link to="/frame-extractor">Frame Extractor</Link></li>
+              <li><Link to="/#about">About</Link></li>
             </ul>
           </div>
           <div>
