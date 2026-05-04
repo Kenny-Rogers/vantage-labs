@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-64748b?style=flat-square)](LICENSE)
 [![React 19](https://img.shields.io/badge/react-19-0d9488?style=flat-square&logo=react&logoColor=white)](https://react.dev)
 [![Cloudflare Workers](https://img.shields.io/badge/hosting-Cloudflare%20Workers-f38020?style=flat-square&logo=cloudflare&logoColor=white)](https://developers.cloudflare.com/workers/)
-[![Made in Accra](https://img.shields.io/badge/made%20in-Accra-64748b?style=flat-square)](#about)
+[![Made in Accra](https://img.shields.io/badge/made%20in-Accra-64748b?style=flat-square)](https://www.lodonu.dev/)
 
 ![VantageLabs home](docs/screenshots/hero.png)
 
@@ -154,10 +154,6 @@ python3 extractor.py drone-footage.mp4 --interval 0.5 --output ./stills --qualit
 - [ ] **Object Detection** — YOLOv8 in-browser via ONNX Runtime Web
 - [ ] **Traffic Analysis** — vehicle counting with heatmap overlay
 - [ ] **Aerial Mapper** — orthomosaic stitching
-
-## About
-
-Built by **Kenny Rogers** in Accra, Ghana, exploring the intersection of aerial footage and computer vision. Get in touch at [contact@lodonu.dev](mailto:contact@lodonu.dev) or via [lodonu.dev](https://www.lodonu.dev/).
 
 ## License
 
