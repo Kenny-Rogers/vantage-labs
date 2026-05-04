@@ -36,6 +36,11 @@ function Header() {
               Try it
             </NavLink>
           </li>
+          <li>
+            <NavLink className="nav-link" to="/#about">
+              About
+            </NavLink>
+          </li>
         </ul>
         <a
           className="nav-cta"
@@ -71,6 +76,9 @@ function Header() {
           </li>
           <li>
             <Link to="/frame-extractor" onClick={() => setOpen(false)}>Try it</Link>
+          </li>
+          <li>
+            <Link to="/#about" onClick={() => setOpen(false)}>About</Link>
           </li>
           <li>
             <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
