@@ -7,17 +7,25 @@ const ACCEPTED_EXTENSIONS = ['.mp4', '.mov', '.webm'];
 const DEFAULT_LIMITS = { maxMB: 500, warnMB: 300 };
 
 // Picks an upload size tier based on device capability. Computed on the client
-// only — we never trust SSR/prerender to know the user's device. Mobile UA is
-// always treated as low-tier because iOS Safari doesn't expose deviceMemory and
-// kills tabs around ~1 GB resident.
+// only — we never trust SSR/prerender to know the user's device. iOS Safari
+// hides navigator.deviceMemory entirely, so for iPhone/iPad we fall back to the
+// iOS major version from the UA as a coarse proxy for hardware class
+// (iOS 18+ ≈ iPhone 15 Pro and newer with 8 GB RAM). Android exposes
+// deviceMemory like other Chromium platforms, so it falls through.
 function getDeviceTier() {
   if (typeof navigator === 'undefined') return DEFAULT_LIMITS;
   const ua = navigator.userAgent || '';
-  if (/Mobi|Android|iPhone|iPad|iPod/i.test(ua)) {
-    return { maxMB: 250, warnMB: 150 };
+
+  if (/iPhone|iPad|iPod/i.test(ua)) {
+    const m = ua.match(/OS (\d+)[_.]/);
+    const ios = m ? parseInt(m[1], 10) : null;
+    if (ios != null && ios >= 18) return { maxMB: 1024, warnMB: 600 };
+    if (ios != null && ios >= 16) return { maxMB: 500, warnMB: 300 };
+    return { maxMB: 250, warnMB: 150 }; // older or unparsable
   }
+
   const mem = navigator.deviceMemory;
-  if (mem == null) return DEFAULT_LIMITS; // Safari/Firefox don't expose this.
+  if (mem == null) return DEFAULT_LIMITS; // desktop Safari/Firefox don't expose this.
   if (mem <= 2) return { maxMB: 250, warnMB: 150 };
   if (mem <= 4) return { maxMB: 500, warnMB: 300 };
   if (mem <= 8) return { maxMB: 1024, warnMB: 600 };
