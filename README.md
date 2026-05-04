@@ -24,7 +24,7 @@
 
 A focused toolkit for working with drone footage and video files in the browser. Drop a video in, get the frames out. No upload, no server, no account.
 
-The same computer-vision logic ships twice: once as JavaScript that runs on the user's GPU/CPU via the Canvas API, and once as Python under `python/` that the standalone CLI uses today and Pyodide will load directly into the browser tab tomorrow.
+The same computer-vision logic ships twice: once as JavaScript that runs on the user's GPU/CPU via the Canvas API, and once as Python under `python/`. The Python sibling powers the standalone CLI and also loads directly into the browser tab via [Pyodide](https://pyodide.org/) — Frame Extractor exposes a JS / Python engine toggle, and the 10 MB Pyodide runtime is fetched lazily only when the user opts in.
 
 ## Available tools
 
@@ -54,7 +54,7 @@ For heavier algorithms that don't fit comfortably in JavaScript, the same logic 
 - **Canvas API + HTML5 Video** for in-browser frame extraction.
 - **JSZip** for client-side ZIP packaging (lazy-loaded chunk).
 - **OpenCV (cv2)** for the Python sibling of the in-browser pipeline.
-- **Pyodide** *(planned)* runs the Python tools in the same browser tab.
+- **Pyodide** runs the Python tools in the same browser tab; lazy-loaded on demand.
 - **YOLOv8 / ONNX Runtime Web** *(planned)* for object detection without a server.
 - **Cloudflare Workers Assets** for hosting (see [Deploying](#deploying)). SPA fallback handled at the platform level.
 - **GitHub Actions** for CI: install, build, prerender, deploy via Wrangler.
@@ -148,7 +148,7 @@ python3 extractor.py drone-footage.mp4 --interval 0.5 --output ./stills --qualit
 - [x] **GitHub Actions** CI: build + prerender + deploy
 - [x] **SEO** — per-route prerendered HTML, sitemap, robots, llms.txt, JSON-LD
 - [x] **Mobile nav** — hamburger menu, hash-anchor scrolling under sticky header
-- [ ] **Pyodide integration** — run Python tools in-browser
+- [x] **Pyodide integration** — Python tools run in-browser via lazy-loaded runtime
 - [ ] **Sharpness Scorer** — auto-rank frames by Laplacian variance
 - [ ] **Color Segmentation** — HSV thresholds for vegetation / water / built
 - [ ] **Object Detection** — YOLOv8 in-browser via ONNX Runtime Web
