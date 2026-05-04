@@ -48,17 +48,6 @@ VantageLabs is a **client-only** app. There is no backend we own. When you drop 
 
 For heavier algorithms that don't fit comfortably in JavaScript, the same logic is written in Python under `python/` and will load in the browser via [Pyodide](https://pyodide.org/) (same entry points, same defaults) so the standalone CLI tool and the in-browser tool stay aligned. For models that even Pyodide can't carry (large YOLO weights, mapping pipelines), an optional Hugging Face Inference Endpoint is the only network hop.
 
-### SEO + AI crawlers
-
-The site is a CRA SPA, but every route ships as fully-rendered HTML for crawlers that don't run JS:
-
-- `scripts/prerender.js` runs as a `postbuild` step. It boots a static server against `build/`, drives Puppeteer around each route, and writes the rendered HTML back into `build/<route>/index.html`. `react-helmet-async` populates the per-route `<title>` / `<meta>` first.
-- On the client, `src/index.js` detects a non-empty `#root` and switches from `createRoot` to `hydrateRoot` so React picks up where the snapshot left off.
-- `public/robots.txt`, `public/sitemap.xml`, and `public/llms.txt` (per [llmstxt.org](https://llmstxt.org)) point both classic crawlers and AI agents at every route.
-- A JSON-LD `WebApplication` block in `public/index.html` adds semantic context.
-
-If Puppeteer's Chrome can't launch (missing GUI libs in some build containers), the prerender step gracefully skips and the SPA still ships, just without snapshots.
-
 ## Tech stack
 
 - **React 19 + React Router 7** for UI and routing, with `react-helmet-async` for per-route meta.
