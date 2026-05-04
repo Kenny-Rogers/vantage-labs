@@ -19,6 +19,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "vantage-labs",
+  "main": "worker.js",
   "compatibility_date": "2026-05-03",
   "compatibility_flags": ["nodejs_compat"],
   "observability": {
@@ -26,6 +27,7 @@
   },
   "assets": {
     "directory": "build",
+    "binding": "ASSETS",
     "not_found_handling": "single-page-application"
   }
 }
