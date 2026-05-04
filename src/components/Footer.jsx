@@ -10,8 +10,8 @@ function Footer() {
             <p style={{ margin: 0, maxWidth: '32ch', color: 'var(--ink-2)' }}>
               For collaborations, papers, or borrowing a model, drop a line.
             </p>
-            <a className="footer-contact" href="mailto:hello@vantagelabs.dev">
-              hello@vantagelabs.dev <span>↗</span>
+            <a className="footer-contact" href="mailto:contact@lodonu.dev">
+              contact@lodonu.dev <span>↗</span>
             </a>
           </div>
           <div>
@@ -25,6 +25,15 @@ function Footer() {
           <div>
             <h4>Elsewhere</h4>
             <ul>
+              <li>
+                <a
+                  href="https://www.lodonu.dev/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Lodonu ↗
+                </a>
+              </li>
               <li>
                 <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
                   GitHub ↗

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import {
   Stripes,
   BoxesOverlay,
@@ -328,6 +329,14 @@ function About() {
 function Home() {
   return (
     <>
+      <Helmet>
+        <title>VantageLabs · Computer Vision Tools for Aerial Footage</title>
+        <meta
+          name="description"
+          content="A working studio for computer-vision systems on everyday photographs. Extract frames, score sharpness, segment colour, detect objects, all in your browser. No upload, no server."
+        />
+        <link rel="canonical" href="https://vantage.lodonu.dev/" />
+      </Helmet>
       <Hero />
       <div className="wrap">
         <div className="hairline" style={{ marginTop: 60 }} />

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import VideoDropZone from '../components/VideoDropZone';
 import ProgressBar from '../components/ProgressBar';
 import ImageGrid from '../components/ImageGrid';
@@ -254,6 +255,14 @@ function FrameExtractor() {
 
   return (
     <div className="container">
+      <Helmet>
+        <title>Frame Extractor · VantageLabs</title>
+        <meta
+          name="description"
+          content="Pull high-resolution stills from any video at a chosen interval. Runs entirely in your browser via Canvas API. Supports MP4, MOV, WebM. No upload, no server."
+        />
+        <link rel="canonical" href="https://vantage.lodonu.dev/frame-extractor" />
+      </Helmet>
       <header className="page-header">
         <h1>Frame Extractor</h1>
         <p>Extract high-res still frames from any video file.</p>

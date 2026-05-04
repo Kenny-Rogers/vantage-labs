@@ -11,6 +11,7 @@
     "jszip": "^3.10.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-helmet-async": "^3.0.0",
     "react-router-dom": "^7.14.2",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
@@ -20,6 +21,7 @@
     "start": "react-scripts start",
     "prebuild": "node scripts/sync-python.js",
     "build": "react-scripts build",
+    "postbuild": "node scripts/prerender.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -40,5 +42,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "puppeteer": "^24.42.0",
+    "serve-handler": "^6.1.7"
   }
 }

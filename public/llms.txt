@@ -1,0 +1,37 @@
+# VantageLabs
+
+> Computer-vision tools for aerial and video footage that run entirely in the user's browser. No upload, no server, no account. Open source under MIT.
+
+VantageLabs ships every tool in two forms: a JavaScript implementation that runs in the browser via the Canvas API, and a Python implementation that runs as a CLI (and, increasingly, in the same browser tab via Pyodide). Privacy by default — video and image data never leaves the user's machine.
+
+The site is built and maintained by Kenny Rogers, an engineer based in Accra, Ghana.
+
+## Available now
+
+- [Frame Extractor](https://vantage.lodonu.dev/frame-extractor) — pull high-resolution stills from any video file at a chosen interval. Runs entirely in-browser via HTML5 Video + Canvas API. Optional Python engine (Pyodide) computes Laplacian-variance sharpness scores per extracted frame. Supports MP4, MOV, and WebM up to 500 MB. Lets users download a single frame as JPEG or all frames as a ZIP.
+
+## Coming soon
+
+- [Sharpness Scorer](https://vantage.lodonu.dev/sharpness-scorer) — auto-rank extracted frames by image quality using Laplacian variance.
+- [Color Segmentation](https://vantage.lodonu.dev/color-segmentation) — classify aerial imagery into vegetation, water, and built areas using HSV thresholds.
+- [Object Detection](https://vantage.lodonu.dev/object-detection) — detect and count objects in aerial footage using YOLOv8 in the browser via ONNX Runtime Web.
+- [Traffic Analysis](https://vantage.lodonu.dev/traffic-analysis) — count and track vehicles from aerial footage with a heatmap overlay surfacing congested lanes and intersections.
+- [Aerial Mapper](https://vantage.lodonu.dev/aerial-mapper) — stitch overlapping aerial photos into orthomosaic maps.
+
+## Tech stack
+
+- React 19 + React Router 7 for the UI
+- HTML5 Video + Canvas API for in-browser frame extraction
+- JSZip (lazy-loaded) for client-side ZIP packaging
+- OpenCV (Python sibling for the CLI tools)
+- Pyodide for running Python in the browser
+- Cloudflare Workers Assets for hosting at https://vantage.lodonu.dev
+
+## Source code and license
+
+- GitHub: https://github.com/Kenny-Rogers/vantage-labs
+- License: MIT
+
+## Author
+
+Kenny Rogers, software engineer in Accra, Ghana, exploring the intersection of aerial footage and computer vision.

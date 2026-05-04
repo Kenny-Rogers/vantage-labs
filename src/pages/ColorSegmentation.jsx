@@ -1,8 +1,17 @@
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 function ColorSegmentation() {
   return (
     <div className="container">
+      <Helmet>
+        <title>Color Segmentation · VantageLabs</title>
+        <meta
+          name="description"
+          content="Classify aerial imagery into vegetation, water, and built areas using HSV thresholds. Coming soon to VantageLabs."
+        />
+        <link rel="canonical" href="https://vantage.lodonu.dev/color-segmentation" />
+      </Helmet>
       <header className="page-header">
         <h1>Color Segmentation</h1>
         <p>Classify land cover from aerial imagery.</p>

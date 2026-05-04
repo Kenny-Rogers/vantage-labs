@@ -12,13 +12,11 @@
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
     />
 
-    <title>VantageLabs · Computer Vision Tools for Aerial Footage</title>
-    <meta
-      name="description"
-      content="Extract the best frames from your drone footage. Free, private, runs entirely in your browser."
-    />
+    <!-- Per-route <title>, <meta description> and <link canonical> are
+         injected by react-helmet-async at render time and captured by
+         the postbuild prerender step (scripts/prerender.js). They are
+         intentionally absent here so they don't get duplicated. -->
 
-    <link rel="canonical" href="https://vantage.lodonu.dev/" />
     <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16.png" />
@@ -50,6 +48,40 @@
     />
     <meta name="twitter:image" content="https://vantage.lodonu.dev/og-image.png" />
     <meta name="twitter:image:alt" content="VantageLabs · Computer Vision Tools for Aerial Footage" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "VantageLabs",
+        "url": "https://vantage.lodonu.dev/",
+        "description": "Computer-vision tools for aerial and video footage that run entirely in your browser. No upload, no server, no account.",
+        "applicationCategory": "MultimediaApplication",
+        "applicationSubCategory": "Computer Vision",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "image": "https://vantage.lodonu.dev/og-image.png",
+        "creator": {
+          "@type": "Person",
+          "name": "Kenny Rogers",
+          "jobTitle": "Software Engineer",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Accra",
+            "addressCountry": "GH"
+          },
+          "sameAs": ["https://github.com/Kenny-Rogers"]
+        },
+        "softwareVersion": "1.0",
+        "license": "https://opensource.org/licenses/MIT",
+        "isAccessibleForFree": true,
+        "sameAs": ["https://github.com/Kenny-Rogers/vantage-labs"]
+      }
+    </script>
   </head>
   <body>
     <noscript>VantageLabs needs JavaScript to run. Please enable it and reload.</noscript>

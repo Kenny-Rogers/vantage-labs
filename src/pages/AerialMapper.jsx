@@ -1,8 +1,17 @@
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 function AerialMapper() {
   return (
     <div className="container">
+      <Helmet>
+        <title>Aerial Mapper · VantageLabs</title>
+        <meta
+          name="description"
+          content="Stitch overlapping aerial photos into orthomosaic maps. Coming soon to VantageLabs."
+        />
+        <link rel="canonical" href="https://vantage.lodonu.dev/aerial-mapper" />
+      </Helmet>
       <header className="page-header">
         <h1>Aerial Mapper</h1>
         <p>Stitch photos into orthomosaic maps.</p>
